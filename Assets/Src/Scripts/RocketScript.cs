@@ -17,6 +17,7 @@ public class RocketScript : MonoBehaviour
 
     [Header("General")]
     [SerializeField] public MeshRenderer render = null;
+    [SerializeField] public float DamageAmount = 10;
 
 
     private Rigidbody _rigidbody;
@@ -40,7 +41,7 @@ public class RocketScript : MonoBehaviour
 
         var currentDirection = transform.forward;
 
-        if (Target)
+        if (Target && Target.IsExist())
         {
             var currentPosition = transform.position;
             var targetPosition = Target.GetPosition();
@@ -62,6 +63,12 @@ public class RocketScript : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
+        var destroyable = other.gameObject.GetComponent<Destroyable>();
+        if (destroyable != null)
+        {
+            destroyable.ApplyDamage(DamageAmount);
+        }
+
         Explode();
     }
 

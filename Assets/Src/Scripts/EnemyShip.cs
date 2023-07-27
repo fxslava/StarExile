@@ -34,7 +34,7 @@ public class EnemyShip : MonoBehaviour
     {
         _rocketAttackTime += Time.fixedDeltaTime;
 
-        if (_aircraftControlSystem && Target)
+        if (_aircraftControlSystem && Target && Target.IsExist())
         {
             var currentPosition = transform.position;
             var targetPosition = Target.GetPosition();
@@ -52,12 +52,15 @@ public class EnemyShip : MonoBehaviour
 
     private void RocketAttack()
     {
-        var Rocket1 = Instantiate(Rocket, RocketSlot1.position, RocketSlot1.rotation);
-        var Rocket2 = Instantiate(Rocket, RocketSlot2.position, RocketSlot2.rotation);
+        if (Target && Target.IsExist())
+        {
+            var Rocket1 = Instantiate(Rocket, RocketSlot1.position, RocketSlot1.rotation);
+            var Rocket2 = Instantiate(Rocket, RocketSlot2.position, RocketSlot2.rotation);
 
-        Rocket1.GetComponent<RocketScript>().Target = Target;
-        Rocket2.GetComponent<RocketScript>().Target = Target;
-        Rocket1.GetComponent<Rigidbody>().velocity = _rigidbody.velocity;
-        Rocket2.GetComponent<Rigidbody>().velocity = _rigidbody.velocity;
+            Rocket1.GetComponent<RocketScript>().Target = Target;
+            Rocket2.GetComponent<RocketScript>().Target = Target;
+            Rocket1.GetComponent<Rigidbody>().velocity = _rigidbody.velocity;
+            Rocket2.GetComponent<Rigidbody>().velocity = _rigidbody.velocity;
+        }
     }
 }

@@ -316,6 +316,7 @@ MonoBehaviour:
   SelfDestructTimeout: 1
   ExplosionParticleSystem: {fileID: 2371759104051098918}
   render: {fileID: 8307673812303139221}
+  DamageAmount: 5
 --- !u!64 &7930427348594073870
 MeshCollider:
   m_ObjectHideFlags: 0

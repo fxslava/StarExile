@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 6817581250333288260}
   - component: {fileID: 6572719547748426254}
   m_Layer: 0
-  m_Name: polySurface1
+  m_Name: ShipMesh
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -93,6 +93,8 @@ GameObject:
   m_Component:
   - component: {fileID: 7474555652451800942}
   - component: {fileID: 3901025865110748824}
+  - component: {fileID: 3098614080842125036}
+  - component: {fileID: 6237057884709088380}
   - component: {fileID: 8110670036411221300}
   m_Layer: 0
   m_Name: StarShip
@@ -108,15 +110,15 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7850095684860988884}
-  m_LocalRotation: {x: -0.0009135061, y: -0.0046019885, z: -0.004297766, w: 0.9999798}
+  m_LocalRotation: {x: -0.00091406895, y: -0.004602895, z: -0.0042977696, w: 0.99997973}
   m_LocalPosition: {x: -0.043804556, y: 4.483737, z: -10.049464}
-  m_LocalScale: {x: 0.16031, y: 0.16031, z: 0.16031002}
+  m_LocalScale: {x: 0.16031, y: 0.16031, z: 0.16031}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 3347155302042008937}
   m_Father: {fileID: 0}
-  m_RootOrder: 4
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: -0.107, y: -0.527, z: -0.492}
 --- !u!114 &3901025865110748824
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -134,12 +136,52 @@ MonoBehaviour:
   m_LoopMode: 1
   m_Method: 0
   m_Duration: 50
-  m_MaxSpeed: 28.46416
+  m_MaxSpeed: 29.218565
   m_EasingMode: 0
   m_AlignmentMode: 1
   m_ObjectForwardAxis: 2
   m_ObjectUpAxis: 1
-  m_StartOffset: 0.81
+  m_StartOffset: 0
+--- !u!64 &3098614080842125036
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7850095684860988884}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 5
+  m_Convex: 1
+  m_CookingOptions: 30
+  m_Mesh: {fileID: 6329158148709259305, guid: 7d858b7fcaad22a438dee79096d8e239, type: 3}
+--- !u!114 &6237057884709088380
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7850095684860988884}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 846a01376fbd9eb42a4d1d5d02b98b61, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Health: 100
+  ExplosionPS: {fileID: 198917022394846920, guid: e1b08032bec16ba4eb1ae23cbd572664, type: 3}
+  FragmentsObject: {fileID: 6072865222722544376, guid: 6e2d0b8c73d892d40afd92c6cbab66f0, type: 3}
+  ExplosionEpicenter: {fileID: 7474555652451800942}
+  ExplosionForce: 1000
+  ExplosionRadius: 2
 --- !u!114 &8110670036411221300
 MonoBehaviour:
   m_ObjectHideFlags: 0
