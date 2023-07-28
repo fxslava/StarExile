@@ -47,9 +47,12 @@ Shader "Custom/DamageEffectSurfaceShader"
             float3 uvw = (mul(unity_WorldToObject, float4(IN.worldPos, 1)).xyz * _DamageGridInvExtents.xyz + 1.0f) / 2.0f;
             float damage = tex3D(_DamageTex, uvw).r;
 
+            if (damage > 0.6)
+                discard;
+
             // Albedo comes from a texture tinted by color
             fixed4 c = tex2D (_MainTex, IN.uv_MainTex) * _Color;
-            o.Albedo = c.rgb * (1.0f - damage);
+            o.Albedo = c.rgb * (1.0f - damage * 2.0);
             // Metallic and smoothness come from slider variables
             o.Metallic = _Metallic;
             o.Smoothness = _Glossiness;

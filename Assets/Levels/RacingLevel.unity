@@ -6276,7 +6276,8 @@ MonoBehaviour:
   DamageMaskResolutionX: 128
   DamageMaskResolutionY: 128
   DamageMaskResolutionZ: 128
-  damageHitRadius: 0.2
+  DamageHitRadius: 1
+  DamageIntensity: 1
   _drawDamageShader: {fileID: 7200000, guid: 86aa71f76ce6a7a49af43543ad547c21, type: 3}
 --- !u!135 &754834617
 SphereCollider:
@@ -9099,7 +9100,8 @@ MonoBehaviour:
   DamageMaskResolutionX: 128
   DamageMaskResolutionY: 128
   DamageMaskResolutionZ: 128
-  damageHitRadius: 0.02
+  DamageHitRadius: 0.05
+  DamageIntensity: 10
   _drawDamageShader: {fileID: 7200000, guid: 86aa71f76ce6a7a49af43543ad547c21, type: 3}
 --- !u!64 &1227653932
 MeshCollider:

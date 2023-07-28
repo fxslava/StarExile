@@ -20,7 +20,7 @@ void DrawDamage(uint3 DTid : SV_DispatchThreadID)
     if (distance < Radius) {
         float mask = DamageMask[DTid];
 
-        float resultIntensity = saturate(mask + /*distance * Intensity*/1.0f);
+        float resultIntensity = saturate(mask + (Radius - distance) * Intensity);
 
         DamageMask[DTid] = resultIntensity;
     }

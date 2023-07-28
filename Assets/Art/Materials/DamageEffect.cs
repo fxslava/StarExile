@@ -6,7 +6,8 @@ public class DamageEffect : MonoBehaviour
     [SerializeField] public int DamageMaskResolutionX = 128;
     [SerializeField] public int DamageMaskResolutionY = 128;
     [SerializeField] public int DamageMaskResolutionZ = 128;
-    [SerializeField] public float damageHitRadius = 1.0f;
+    [SerializeField] public float DamageHitRadius = 1.0f;
+    [SerializeField] public float DamageIntensity = 1.0f;
     [SerializeField] private ComputeShader _drawDamageShader;
 
 
@@ -59,7 +60,7 @@ public class DamageEffect : MonoBehaviour
     void DrawDamage(Vector3 localPoint, float intensity)
     {
         _drawDamageShader.SetFloat("Intensity", intensity);
-        _drawDamageShader.SetFloat("Radius", damageHitRadius);
+        _drawDamageShader.SetFloat("Radius", DamageHitRadius);
         _drawDamageShader.SetVector("Position", Vector3.Scale(localPoint, _dimenssionsScale));
 
         var threadGroupX = (int)(DamageMaskResolutionX / _threadX);
@@ -82,7 +83,7 @@ public class DamageEffect : MonoBehaviour
             if (_collider.Raycast(ray, out hit, 100.0f))
             {
                 var localHitPoint = _collider.transform.InverseTransformPoint(hit.point);
-                DrawDamage(localHitPoint, 0.1f);
+                DrawDamage(localHitPoint, DamageIntensity);
             }
         }
 
