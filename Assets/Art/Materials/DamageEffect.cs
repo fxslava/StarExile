@@ -8,7 +8,6 @@ public class DamageEffect : MonoBehaviour
     [SerializeField] public int DamageMaskResolutionZ = 128;
     [SerializeField] public float damageHitRadius = 1.0f;
     [SerializeField] private ComputeShader _drawDamageShader;
-    [SerializeField] private Material _damageMaterial;
 
 
     private Collider _collider;
@@ -17,6 +16,7 @@ public class DamageEffect : MonoBehaviour
     private uint _threadX;
     private uint _threadY;
     private uint _threadZ;
+    Vector3 _dimenssionsScale;
 
     private Renderer _renderer;
 
@@ -36,9 +36,12 @@ public class DamageEffect : MonoBehaviour
         _kernelIndex = _drawDamageShader.FindKernel("DrawDamage");
 
         _drawDamageShader.GetKernelThreadGroupSizes(_kernelIndex, out _threadX, out _threadY, out _threadZ);
-        _drawDamageShader.SetTexture(_kernelIndex, "DamageMask", _damageMaskTex3D);
 
         _collider = GetComponent<Collider>();
+
+        _dimenssionsScale.x = 1.0f / _collider.bounds.extents.x;
+        _dimenssionsScale.y = 1.0f / _collider.bounds.extents.y;
+        _dimenssionsScale.z = 1.0f / _collider.bounds.extents.z;
 
         Vector3 invDimensions;
         invDimensions.x = 1.0f / DamageMaskResolutionX;
@@ -47,28 +50,23 @@ public class DamageEffect : MonoBehaviour
 
         _drawDamageShader.SetVector("InvDimensions", invDimensions);
 
-        _renderer = GetComponent<Renderer>();
-        _renderer.material = _damageMaterial;
-        _renderer.material.SetTexture("_MainTex", _damageMaskTex3D); // TODO: Rename to damage texture 3d
+        _renderer = GetComponentInChildren<Renderer>();
+        _renderer.material.SetTexture("_DamageTex", _damageMaskTex3D);
+        _renderer.material.SetVector("_DamageGridInvExtents", new Vector4(_dimenssionsScale.x, _dimenssionsScale.y, _dimenssionsScale.z, 0f));
     }
 
 
     void DrawDamage(Vector3 localPoint, float intensity)
     {
-        Vector3 dimenssionsScale;
-        dimenssionsScale.x = 1.0f / _collider.bounds.extents.x;
-        dimenssionsScale.y = 1.0f / _collider.bounds.extents.y;
-        dimenssionsScale.z = 1.0f / _collider.bounds.extents.z;
-
         _drawDamageShader.SetFloat("Intensity", intensity);
         _drawDamageShader.SetFloat("Radius", damageHitRadius);
-        _drawDamageShader.SetVector("Position", Vector3.Scale(localPoint, dimenssionsScale));
+        _drawDamageShader.SetVector("Position", Vector3.Scale(localPoint, _dimenssionsScale));
 
         var threadGroupX = (int)(DamageMaskResolutionX / _threadX);
         var threadGroupY = (int)(DamageMaskResolutionY / _threadY);
         var threadGroupZ = (int)(DamageMaskResolutionZ / _threadZ);
 
-        _renderer.material.SetVector("_CubeOrigin", transform.position);
+        _drawDamageShader.SetTexture(_kernelIndex, "DamageMask", _damageMaskTex3D);
 
         _drawDamageShader.Dispatch(_kernelIndex, threadGroupX, threadGroupY, threadGroupZ);
     }
@@ -83,7 +81,7 @@ public class DamageEffect : MonoBehaviour
 
             if (_collider.Raycast(ray, out hit, 100.0f))
             {
-                var localHitPoint = transform.InverseTransformPoint(hit.point);
+                var localHitPoint = _collider.transform.InverseTransformPoint(hit.point);
                 DrawDamage(localHitPoint, 0.1f);
             }
         }
