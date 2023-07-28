@@ -14,6 +14,8 @@ public class RocketScript : MonoBehaviour
     [Header("Detonator")]
     [SerializeField] public float SelfDestructTimeout = 10.0f;
     [SerializeField] public GameObject ExplosionParticleSystem = null;
+    [SerializeField] public float DamageRadius = 1.0f;
+    [SerializeField] public float DamageIntensity = 5.0f;
 
     [Header("General")]
     [SerializeField] public MeshRenderer render = null;
@@ -66,7 +68,7 @@ public class RocketScript : MonoBehaviour
         var destroyable = other.gameObject.GetComponent<Destroyable>();
         if (destroyable != null)
         {
-            destroyable.ApplyDamage(DamageAmount);
+            destroyable.ApplyDamage(transform.position, DamageAmount, DamageRadius, DamageIntensity);
         }
 
         Explode();

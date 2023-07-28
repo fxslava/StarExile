@@ -1,0 +1,35 @@
+#pragma kernel DrawDamage
+
+float  Intensity;
+float  Radius;
+float3 Position;
+float3 InvDimensions;
+float  Fade;
+
+RWTexture3D<float2> DamageMask;
+
+[numthreads(8,8,1)]
+void DrawDamage(uint3 DTid : SV_DispatchThreadID)
+{
+    float3 currentPosition = float3(
+        float(DTid.x) * InvDimensions.x - 0.5f, 
+        float(DTid.y) * InvDimensions.y - 0.5f, 
+        float(DTid.z) * InvDimensions.z - 0.5f) * 2.0f;
+
+    float distance = length(Position - currentPosition);
+
+    if (distance < Radius) {
+        float2 mask = DamageMask[DTid];
+
+        float2 resultIntensity;
+        resultIntensity.x = saturate(mask.x + (Radius - distance) * Intensity);
+        resultIntensity.y = saturate(mask.y + (Radius - distance) * Intensity);
+        resultIntensity.y = resultIntensity.y < 0.01f ? 0.0f : resultIntensity.y * Fade;
+
+        DamageMask[DTid] = resultIntensity;
+    } else {
+        float2 mask = DamageMask[DTid];
+        mask.y = mask.y < 0.01f ? 0.0f : mask.y * Fade;
+        DamageMask[DTid] = mask;
+    }
+}

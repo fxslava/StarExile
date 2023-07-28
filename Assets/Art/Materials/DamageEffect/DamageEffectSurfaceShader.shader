@@ -8,6 +8,7 @@ Shader "Custom/DamageEffectSurfaceShader"
         _Glossiness ("Smoothness", Range(0,1)) = 0.5
         _Metallic ("Metallic", Range(0,1)) = 0.0
         _DamageGridInvExtents ("Damage Grid Inverted Extents (XYZ)", Vector) = (1,1,1,1)
+        _HoleThreashold ("Hole Threashold", Range(0,1)) = 0.0
     }
     SubShader
     {
@@ -34,6 +35,7 @@ Shader "Custom/DamageEffectSurfaceShader"
         half _Metallic;
         fixed4 _Color;
         float4 _DamageGridInvExtents;
+        float _HoleThreashold;
 
         // Add instancing support for this shader. You need to check 'Enable Instancing' on materials that use the shader.
         // See https://docs.unity3d.com/Manual/GPUInstancing.html for more information about instancing.
@@ -41,19 +43,27 @@ Shader "Custom/DamageEffectSurfaceShader"
         UNITY_INSTANCING_BUFFER_START(Props)
             // put more per-instance properties here
         UNITY_INSTANCING_BUFFER_END(Props)
+        
+        
+        float3 ThermoGrad (float value)
+        {
+           return (value < 0.5) ? 
+               lerp(float3(0,0,0), float3(1.f, 0.f, 0.f), saturate(value * 2)) : 
+               lerp(float3(1.f, 0.f, 0.f), float3(1.f, 1.f, 0.f), saturate(value * 2 - 1));
+        }
 
         void surf (Input IN, inout SurfaceOutputStandard o)
         {
             float3 uvw = (mul(unity_WorldToObject, float4(IN.worldPos, 1)).xyz * _DamageGridInvExtents.xyz + 1.0f) / 2.0f;
-            float damage = tex3D(_DamageTex, uvw).r;
+            float2 damage = tex3D(_DamageTex, uvw).rg;
 
-            if (damage > 0.6)
+            if (damage.r > _HoleThreashold)
                 discard;
 
             // Albedo comes from a texture tinted by color
             fixed4 c = tex2D (_MainTex, IN.uv_MainTex) * _Color;
-            o.Albedo = c.rgb * (1.0f - damage * 2.0);
-            // Metallic and smoothness come from slider variables
+            o.Albedo = c.rgb * (1.0f - damage.r * 2.0);
+            o.Emission = ThermoGrad(damage.g * 2.0) * damage.g;
             o.Metallic = _Metallic;
             o.Smoothness = _Glossiness;
             o.Alpha = c.a;

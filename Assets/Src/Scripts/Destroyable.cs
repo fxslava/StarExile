@@ -12,9 +12,20 @@ public class Destroyable : MonoBehaviour
     [SerializeField] public float ExplosionRadius = 2.0f;
 
 
-    public void ApplyDamage(float value)
+    private DamageEffect _damageEffect = null;
+
+
+    private void Awake()
     {
-        Health -= value;
+        _damageEffect = GetComponent<DamageEffect>();
+    }
+
+
+    public void ApplyDamage(Vector3 position, float amount, float radius, float intensity)
+    {
+        _damageEffect.DrawDamage(transform.InverseTransformPoint(position), radius, intensity);
+
+        Health -= amount;
         if (Health <= 0)
         {
             Explode();
