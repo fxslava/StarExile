@@ -8,6 +8,10 @@ float  Fade;
 
 RWTexture3D<float2> DamageMask;
 
+float fade(float val) {
+    return val < 0.01f ? 0.0f : val * Fade;
+}
+
 [numthreads(8,8,1)]
 void DrawDamage(uint3 DTid : SV_DispatchThreadID)
 {
@@ -22,14 +26,14 @@ void DrawDamage(uint3 DTid : SV_DispatchThreadID)
         float2 mask = DamageMask[DTid];
 
         float2 resultIntensity;
-        resultIntensity.x = saturate(mask.x + (Radius - distance) * Intensity);
-        resultIntensity.y = saturate(mask.y + (Radius - distance) * Intensity);
-        resultIntensity.y = resultIntensity.y < 0.01f ? 0.0f : resultIntensity.y * Fade;
+        resultIntensity.r = saturate(mask.x + (Radius - distance) * Intensity);
+        resultIntensity.g = saturate(mask.y + (Radius - distance) * Intensity);
+        resultIntensity.g = fade(resultIntensity.g);
 
         DamageMask[DTid] = resultIntensity;
     } else {
-        float2 mask = DamageMask[DTid];
-        mask.y = mask.y < 0.01f ? 0.0f : mask.y * Fade;
-        DamageMask[DTid] = mask;
+        float2 resultIntensity = DamageMask[DTid];
+        resultIntensity.g = fade(resultIntensity.g);
+        DamageMask[DTid] = resultIntensity;
     }
 }
