@@ -10,6 +10,7 @@ public class Destroyable : MonoBehaviour
     [SerializeField] public Transform ExplosionEpicenter = null;
     [SerializeField] public float ExplosionForce = 100.0f;
     [SerializeField] public float ExplosionRadius = 2.0f;
+    [SerializeField] public float FragmentsTimeout = 10.0f;
 
 
     private DamageEffect _damageEffect = null;
@@ -55,8 +56,8 @@ public class Destroyable : MonoBehaviour
             var ps = Instantiate(ExplosionPS, transform.position, transform.rotation);
             Destroy(ps.gameObject, ps.main.duration);
         }
-
-        gameObject.SetActive(false);
+         
+        Destroy(fragmentsObjest, FragmentsTimeout);
         Destroy(gameObject);
     }
 }

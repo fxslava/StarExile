@@ -45,22 +45,20 @@ public class EnemyShip : MonoBehaviour
         if (_rocketAttackTime > RocketAttackPeriod)
         {
             _rocketAttackTime = 0f;
-            RocketAttack();
+            RocketAttack(RocketSlot1);
+            RocketAttack(RocketSlot2);
         }
     }
 
 
-    private void RocketAttack()
+    private void RocketAttack(Transform RocketSlot)
     {
         if (Target && Target.IsExist())
         {
-            var Rocket1 = Instantiate(Rocket, RocketSlot1.position, RocketSlot1.rotation);
-            var Rocket2 = Instantiate(Rocket, RocketSlot2.position, RocketSlot2.rotation);
+            var rocket = Instantiate(Rocket, RocketSlot.position, RocketSlot.rotation);
 
-            Rocket1.GetComponent<RocketScript>().Target = Target;
-            Rocket2.GetComponent<RocketScript>().Target = Target;
-            Rocket1.GetComponent<Rigidbody>().velocity = _rigidbody.velocity;
-            Rocket2.GetComponent<Rigidbody>().velocity = _rigidbody.velocity;
+            rocket.GetComponent<RocketScript>().Target = Target;
+            rocket.GetComponent<Rigidbody>().velocity = _rigidbody.velocity;
         }
     }
 }

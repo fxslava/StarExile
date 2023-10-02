@@ -27,8 +27,6 @@ public class Aircraft : MonoBehaviour {
         var upwardVelocity = upwardVelocityMagnitude * currentUpVector;
         var sideVelocity = lateralVelocity - upwardVelocity;
 
-        _rigidbody.AddForce(-ResistanceRate.x * sideVelocity);
-        _rigidbody.AddForce(-ResistanceRate.y * upwardVelocity);
-        _rigidbody.AddForce(-ResistanceRate.z * currentVelocity);
+        _rigidbody.AddForce(-(ResistanceRate.x * sideVelocity + ResistanceRate.y * upwardVelocity + ResistanceRate.z * currentVelocity));
     }
 }
